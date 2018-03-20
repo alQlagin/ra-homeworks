@@ -8,10 +8,6 @@ class Calendar extends React.Component {
             <CalendarTable date={currentDate}/>
         </div>
     }
-
-    renderCurrentDate(dateMoment) {
-
-    }
 }
 
 class CalendarMaterialHeader extends React.Component {
@@ -45,30 +41,20 @@ class CalendarTable extends React.Component {
         return <table className="ui-datepicker-calendar">
             {this.colsGroup}
             {this.head}
-            <tbody>
-            {this.getTableRows(this.props.date)}
-            </tbody>
+            {this.renderBody(this.props.date)}
         </table>
     }
 
-    getTableRows(date) {
+    renderBody(date) {
+        const rows = getCalendarRows(date)
+            .map(row => <tr>
+                    {row.map(
+                        item => <td className={item.otherMonth && 'ui-datepicker-other-month'}>{item.date}</td>
+                    )}
+                </tr>
+            );
 
-        const today = moment(date);
-        const rows = [];
-        const _date = today.clone().startOf('month').startOf('week');
-        while (_date.month() <= today.month()) {
-            const row = [];
-            do {
-                row.push(
-                    <td className={!today.isSame(_date, 'month') ? 'ui-datepicker-other-month' : ''}>
-                        {_date.date()}
-                    </td>
-                );
-                _date.add(1, 'day');
-            } while (row.length < 7);
-            rows.push(row);
-        }
-        return rows.map(row => <tr>{row}</tr>)
+        return <tbody>{rows}</tbody>
     }
 
     get colsGroup() {
@@ -96,4 +82,19 @@ class CalendarTable extends React.Component {
         </tr>
         </thead>
     }
+}
+
+function getCalendarRows(date) {
+    const today = moment(date);
+    const rows = [];
+    const _date = today.clone().startOf('month').startOf('week');
+    while (_date.month() <= today.month()) {
+        const row = [];
+        do {
+            row.push({date: _date.date(), otherMonth: !today.isSame(_date, 'month')});
+            _date.add(1, 'day');
+        } while (row.length < 7);
+        rows.push(row);
+    }
+    return rows;
 }
