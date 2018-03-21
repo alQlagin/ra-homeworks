@@ -8,6 +8,6 @@ function Stars({count}) {
         count--;
     } while (count > 0);
     return <ul className="card-body-stars u-clearfix">
-        <li>{stars.map(() => <Star/>)}</li>
+        <li>{stars.map((empty, index) => <Star key={index}/>)}</li>
     </ul>;
 }
