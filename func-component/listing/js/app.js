@@ -20,7 +20,7 @@ fetch('https://neto-api.herokuapp.com/etsy')
     ));
 
 function Listing({items}) {
-    return <div className="item-list">{items.map(item => <ListingItem item={item}/>)}</div>
+    return <div className="item-list">{items.map(item => <ListingItem item={item} key={item.listing_id}/>)}</div>
 }
 
 function ListingItem({item}) {
